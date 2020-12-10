@@ -43,9 +43,7 @@ class ScreenshotJob implements ShouldQueue
     public function takeScreenshot($url, $randname)
     {
         $url = strpos($url, '.') == false ? $url.'.com' : $url;
-
         Str::substr($url, 0, 4) != 'http' ? $url = 'http://'.$url : '';
-
         Browsershot::url($url)->save('img/'.$randname.'.png');
     }
 }
