@@ -19,14 +19,14 @@ class ScreenshotController extends Controller
     public function store()
     {
         request()->validate([
-            'url' => 'required|min:3'
+            'url' => 'required|min:2'
         ]);
 
         $imgName = Str::random(50);
         ScreenshotJob::dispatch(request('url'), $imgName);
 
         Screenshot::create([
-            'name' => $imgName.'.png'
+            'name' => $imgName . '.png'
         ]);
 
         toastr()->info('Screenshot was successfully created!', 'Successful!');

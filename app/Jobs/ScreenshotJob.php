@@ -19,22 +19,12 @@ class ScreenshotJob implements ShouldQueue
     public $url;
     public $imgName;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
     public function __construct($url, $imgName)
     {
         $this->url = $url;
         $this->imgName = $imgName;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         $this->takeScreenshot($this->url, $this->imgName);
@@ -42,14 +32,14 @@ class ScreenshotJob implements ShouldQueue
 
     public function takeScreenshot($url, $imgName)
     {
-        $url = strpos($url, '.') == false ? $url.'.com' : $url;
-        Str::substr($url, 0, 4) != 'http' ? $url = 'http://'.$url : '';
+        $url = strpos($url, '.') == false ? $url . '.com' : $url;
+        Str::substr($url, 0, 4) != 'http' ? $url = 'http://' . $url : '';
         Browsershot::url($url)
             ->setNodeBinary('/usr/local/bin/node')
             ->setNpmBinary('/usr/local/bin/npm')
             ->noSandbox()
             ->setDelay(1000)
             ->timeout(10)
-            ->save('img/'.$imgName.'.png');
+            ->save('img/' . $imgName . '.png');
     }
 }
