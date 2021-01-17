@@ -17,17 +17,17 @@ class ScreenshotJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $url;
-    public $randname;
+    public $imgName;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($url, $randname)
+    public function __construct($url, $imgName)
     {
         $this->url = $url;
-        $this->randname = $randname;
+        $this->imgName = $imgName;
     }
 
     /**
@@ -37,13 +37,19 @@ class ScreenshotJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->takeScreenshot($this->url, $this->randname);
+        $this->takeScreenshot($this->url, $this->imgName);
     }
 
-    public function takeScreenshot($url, $randname)
+    public function takeScreenshot($url, $imgName)
     {
         $url = strpos($url, '.') == false ? $url.'.com' : $url;
         Str::substr($url, 0, 4) != 'http' ? $url = 'http://'.$url : '';
-        Browsershot::url($url)->save('img/'.$randname.'.png');
+        Browsershot::url($url)
+            ->setNodeBinary('/usr/local/bin/node')
+            ->setNpmBinary('/usr/local/bin/npm')
+            ->noSandbox()
+            ->setDelay(1000)
+            ->timeout(10)
+            ->save('img/'.$imgName.'.png');
     }
 }
